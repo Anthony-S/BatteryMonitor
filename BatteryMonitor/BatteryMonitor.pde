@@ -95,12 +95,12 @@ void setup(void) {
   powerSum = 0;
   sampleCnum=20;
   bCharge = 33000000;  //about (9 kwHr in watt-seconds
-  windowA();
+  drawWindow(wAx, wAy, wAw, wAh, fillA, borderA);
   gridA();
-  windowB();
+  drawWindow(wBx, wBy, wBw, wBh, fillB, borderB);
   gridB();
   traceBupdate();
-  windowC();
+  drawWindow(wCx, wCy, wCw, wCh, fillC, borderC);
   barGraph(0);
   // batVA(46, 0, GREEN);
 }
@@ -108,7 +108,7 @@ void setup(void) {
 void loop() {
   if(millis()>lastMilli + sampleTimeA){
 
-    upDatetraceA(sampleAidx, 0); //erase last traceA
+    updateTrace(sampleAidx, 0, traceA, wAx, wAy, wAh); //erase last traceA
     gridA();
     sampleAidx = sampleAidx+1;
     if(sampleAidx>sampleSize-1)
@@ -117,7 +117,7 @@ void loop() {
     traceA[sampleAidx] = amps/4;
     volts = analogRead(voltsInPin);
 
-    upDatetraceA(sampleAidx, 1);  //newtraceA bicolor
+    updateTrace(sampleAidx, 1, traceA, wAx, wAy, wAh);  //newtraceA bicolor
     sampleBsum = sampleBsum + traceA[sampleAidx];
     if(sampleBctr>sampleBnum-1)
       traceBupdate();
@@ -131,7 +131,7 @@ void loop() {
       if(sampleCidx>sampleSize-1)
         sampleCidx=0;
       traceC[sampleCidx]= int(100*bCharge/bSize);
-      windowC();
+      drawWindow(wCx, wCy, wCw, wCh, fillC, borderC);
       barGraph(sampleCidx);
       sampleCctr = 0;
       Serial.print("inside C loop  c= ");

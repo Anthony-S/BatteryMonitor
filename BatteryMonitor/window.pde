@@ -1,9 +1,7 @@
-
-
-//setup window A
-void windowA(){
-  tft.fillRect(wAx, wAy,wAw, wAh, fillA);
-  tft.drawRect(wAx, wAy,wAw, wAh, borderA);
+//setup windows
+void drawWindow(int x, int y, int w, int h, int fill, int border){
+  tft.fillRect(x, y, w, h, fill);
+  tft.drawRect(x, y, w, h, border);
 }
 //setup grid A
 void gridA(){
@@ -26,18 +24,7 @@ void gridA(){
   for(int i=1; i<6; i++)
     tft.drawVerticalLine(wAx+xStep*i, wAy , wAh, jWheel(16));
 }
-
-//setup window B
-void windowB(){
-  tft.fillRect(wBx, wBy,wBw, wBh, fillB);
-  tft.drawRect(wBx, wBy,wBw, wBh, borderB);
-}
 //setup grid B
 void gridB(){
   tft.drawHorizontalLine(wBx, wBy + wBh/2, 128-wBx, zeroBcolor);
-}
-//setup window CB
-void windowC(){
-  tft.fillRect(wCx, wCy,wCw, wCh, fillC);
-  tft.drawRect(wCx, wCy,wCw, wCh, borderC);
 }
