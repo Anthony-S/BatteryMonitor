@@ -16,11 +16,8 @@ The real amps are clamped between -72 amps, saturation of the Hall effect curren
 Window height must be the amp range -72 to + 32. The positive amps must plot in **green** and the negative amps in **red**.  Zero amps is not in the middle of the window. Each update, once a second, will update the graph on the left as is currently done. The window width is the history time shown, currently about 100 seconds. In the future this vertical scale will be **non-linear**.
 
 This code is current at 
-	void upDatetraceA(int j, byte type){
- 	 //to update first print old pixed black then do new pixel
- 	 // type = 0 color black erase old trace 
- 	// type= 1 red negative green positive
-  	// type= 2 cyan positive
+
+	void upDatetraceA(int j, byte type)
 
 You need to rewrite this so it does the above. Currently it just window centered, colors are reversed and the scale is not correct.
 
