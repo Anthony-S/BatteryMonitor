@@ -30,7 +30,7 @@ int voltsInPin = 1;
 int volts, amps;
 long power, powerSum;
 float bCharge;
-char StrVA[ ] = "Bat 2V.V v sAA amps";
+char StrVA[ ] = "Bat 2V.V v sAA A";
 //inputs for windowA
 int traceA[sampleSize];  //size of array that hold traceA data
 int sampleTimeA = 1000;  //time in ms to samlple A/D inputs for new data
@@ -43,6 +43,9 @@ int fillA=BLACK;
 int borderA=MAGENTA;
 int zeroLoc=128;   //0-255  128 is middle of window
 int zeroAcolor=YELLOW;
+int maxYA = 32;
+int minYA = -72;
+int graticuleStepA = 20;
 //inputs for windowB
 int traceB[sampleSize];  //size of array that hold traceB data
 int sampleBnum=20;  //Number of A samples for each B value intergrate
@@ -56,6 +59,8 @@ int wBh=50;
 int fillB=BLACK;
 int borderB=MAGENTA;
 int zeroBcolor=YELLOW;
+int maxYB = 32;
+int minYB = -72;
 //inputs for window C
 int traceC[sampleSize];  //size of array that hold traceA data
 int sampleTimeC = 1000;  //time in ms to samlple A/D inputs for new data
@@ -80,8 +85,8 @@ void setup(void) {
   Serial.println("done");
   // initalize data arrays with some values
   for(int i=0; i<sampleSize; i++){
-    traceA[i]=128;
-    traceB[i]=128;
+    traceA[i]=0;
+    traceB[i]=0;
     traceC[i]=75;
   }
   //display version number
@@ -96,9 +101,9 @@ void setup(void) {
   sampleCnum=20;
   bCharge = 33000000;  //about (9 kwHr in watt-seconds
   drawWindow(wAx, wAy, wAw, wAh, fillA, borderA);
-  gridA();
+  gridA(maxYA,minYA,graticuleStepA);
   drawWindow(wBx, wBy, wBw, wBh, fillB, borderB);
-  gridB();
+  gridB(maxYB, minYB);
   traceBupdate();
   drawWindow(wCx, wCy, wCw, wCh, fillC, borderC);
   barGraph(0);
@@ -108,16 +113,19 @@ void setup(void) {
 void loop() {
   if(millis()>lastMilli + sampleTimeA){
 
-    updateTrace(sampleAidx, 0, traceA, wAx, wAy, wAh); //erase last traceA
-    gridA();
+    updateTrace(sampleAidx, 0, traceA, wAx, wAy, wAh, maxYA, minYA); //erase last traceA
+    gridA(maxYA,minYA,graticuleStepA);
     sampleAidx = sampleAidx+1;
     if(sampleAidx>sampleSize-1)
       sampleAidx=0;
     amps = analogRead(ampsInPin);
-    traceA[sampleAidx] = amps/4;
+    amps = map(amps, 0, 1023, -132, 32);
+    if(amps<-72)
+      amps = -72;
+    traceA[sampleAidx] = amps;
     volts = analogRead(voltsInPin);
 
-    updateTrace(sampleAidx, 1, traceA, wAx, wAy, wAh);  //newtraceA bicolor
+    updateTrace(sampleAidx, 1, traceA, wAx, wAy, wAh, maxYA, minYA);  //newtraceA bicolor
     sampleBsum = sampleBsum + traceA[sampleAidx];
     if(sampleBctr>sampleBnum-1)
       traceBupdate();
