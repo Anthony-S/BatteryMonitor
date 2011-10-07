@@ -5,31 +5,32 @@ void updateTrace(int j, byte type, int* trace, int wX, int wY, int wH, int maxY,
   // type= 1 red negative green positive
   // type= 2 cyan positive
   int yZero = wY + ((float)wH/(maxY-minY))*maxY;
-  
+  int yZeroLocal = yZero - wY;
   // 1 sample per horiz pixel
   // x is the horizontal sample count, 0 at left most
   // idx is the index into the trace array for position x
   for(int x=1; x<sampleSize; x++){
     int idx;
     int len;
-    int currentAmps;
+    int screenAmps;
     int localY;
     idx = j-x;
     if(idx<0)
       idx=sampleSize + idx;
-    currentAmps = trace[idx];
-    len = wH*abs(currentAmps)/(maxY-minY);
+    screenAmps = trace[idx] - (wH - yZeroLocal);
+    if (trace[idx] == -1) screenAmps = 0; //-1 is the default, because it's an impossible value
+    len = abs(screenAmps);//wH*abs(currentAmps)/(maxY-minY);
     
     switch(type){
     case 0:
-     if(currentAmps>0)
+     if(screenAmps>0)
       tft.drawVerticalLine(wX + x, yZero - len, abs(len), BLACK);
      else
       tft.drawVerticalLine(wX + x, yZero, abs(len), BLACK);
      break;
     case 1:
-     if(currentAmps>0)
-      tft.drawVerticalLine(wX + x, yZero - len, abs(len), GREEN);      
+     if(screenAmps>0)
+      tft.drawVerticalLine(wX + x, yZero - len, abs(len), GREEN);
      else
       tft.drawVerticalLine(wX + x, yZero, abs(len), RED);
      break;

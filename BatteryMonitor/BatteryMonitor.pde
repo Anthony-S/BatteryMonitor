@@ -25,6 +25,7 @@ ST7735 tft = ST7735(cs, dc, rst);
 long lastMilli;
 const byte sampleSize = 128;
 const long bSize = 34128000; //Battery Size in watt-seconds=9.48 kwHrs
+int curve = 0.5; //The curve of graph A and B, for the fscale function
 int ampsInPin = 0;
 int voltsInPin = 1;
 int volts, amps;
@@ -85,8 +86,8 @@ void setup(void) {
   Serial.println("done");
   // initalize data arrays with some values
   for(int i=0; i<sampleSize; i++){
-    traceA[i]=0;
-    traceB[i]=0;
+    traceA[i]=-1;
+    traceB[i]=-1;
     traceC[i]=75;
   }
   //display version number
@@ -122,7 +123,7 @@ void loop() {
     amps = map(amps, 0, 1023, -132, 32);
     if(amps<-72)
       amps = -72;
-    traceA[sampleAidx] = amps;
+    traceA[sampleAidx] = fscale(minYA, maxYA, 0, wAh, amps, curve);
     volts = analogRead(voltsInPin);
 
     updateTrace(sampleAidx, 1, traceA, wAx, wAy, wAh, maxYA, minYA);  //newtraceA bicolor
