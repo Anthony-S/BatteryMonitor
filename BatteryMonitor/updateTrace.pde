@@ -4,7 +4,7 @@ void updateTrace(int j, byte type, int* trace, int wX, int wY, int wH, int maxY,
   // type = 0 color black erase old trace 
   // type= 1 red negative green positive
   // type= 2 cyan positive
-  int yZero = wY + ((float)wH/(maxY-minY))*maxY;
+  int yZero = wY + fscale(minY, maxY, wH, 0, 0, curve);
   int yZeroLocal = yZero - wY;
   // 1 sample per horiz pixel
   // x is the horizontal sample count, 0 at left most
@@ -18,8 +18,8 @@ void updateTrace(int j, byte type, int* trace, int wX, int wY, int wH, int maxY,
     if(idx<0)
       idx=sampleSize + idx;
     screenAmps = trace[idx] - (wH - yZeroLocal);
-    if (trace[idx] == -1) screenAmps = 0; //-1 is the default, because it's an impossible value
-    len = abs(screenAmps);//wH*abs(currentAmps)/(maxY-minY);
+    if (trace[idx] == -1) screenAmps = 0; // -1 is the default, because it's an impossible value
+    len = abs(screenAmps);
     
     switch(type){
     case 0:

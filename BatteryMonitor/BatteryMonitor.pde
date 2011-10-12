@@ -1,4 +1,3 @@
-
 //Data visulize ver1.7 jerry Aug2011 
 //New window management
 
@@ -25,7 +24,7 @@ ST7735 tft = ST7735(cs, dc, rst);
 long lastMilli;
 const byte sampleSize = 128;
 const long bSize = 34128000; //Battery Size in watt-seconds=9.48 kwHrs
-int curve = 0.5; //The curve of graph A and B, for the fscale function
+float curve = -1.5; //The curve of graph A and B, for the fscale function
 int ampsInPin = 0;
 int voltsInPin = 1;
 int volts, amps;
@@ -51,7 +50,6 @@ int graticuleStepA = 20;
 int traceB[sampleSize];  //size of array that hold traceB data
 int sampleBnum=20;  //Number of A samples for each B value intergrate
 int sampleBidx=0;  //B array index
-int sampleBsum=0;  //temp sum for intergrator
 int sampleBctr=0;  //counter of number of B samples collected
 int wBx=12;
 int wBy=wAy + wAh;
@@ -127,7 +125,6 @@ void loop() {
     volts = analogRead(voltsInPin);
 
     updateTrace(sampleAidx, 1, traceA, wAx, wAy, wAh, maxYA, minYA);  //newtraceA bicolor
-    sampleBsum = sampleBsum + traceA[sampleAidx];
     if(sampleBctr>sampleBnum-1)
       traceBupdate();
     sampleBctr = sampleBctr + 1;
