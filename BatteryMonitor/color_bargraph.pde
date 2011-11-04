@@ -78,16 +78,16 @@ void barGraph(int k){  //This is window C I'm just too lazy to change the name.
   // tft.drawVerticalLine(x+wCx, wCy , wCh-yValue, BLACK);
   // }
 
-  DateTime now = RTC.now();//We know there is MUCH better way to do this!
+  DateTime now = RTC.now();
   char date[] = "DD/MM/YY";
-  date[0]= char(48+now.day()/10);
-  date[1]= char(48+now.day()%10);
-  date[3]= char(48+now.month()/10);
-  date[4]= char(48+now.month()%10);
-  date[6]= char(48+(now.year()-2000)/10);
-  date[7]= char(48+now.year()%10);
+  sprintf(date, "%02d/%02d/%02d", now.day(), now.month(), now.year()%100);
+  char time[] = "HH:MM pm";
+  const char* mi = (now.hour() < 12)? "am": "pm";
+  uint8_t hour = ((now.hour()+11)%12)+1; //Get hour for am/pm
+  sprintf(time, "%02d:%02d %s", hour, now.minute(), mi);
+  tft.fillRect(18, wCy-8, 128-18, 7, BLACK);//fill time and date area before write
   tft.drawString(18, wCy-8,date, YELLOW); //date
-  tft.drawString(80, wCy-8,"HH:MM pm", YELLOW);//time make it the real time!
+  tft.drawString(80, wCy-8,time, YELLOW);//time
   tft.fillRect(1, wCy+7,18, 7, BLACK);//fill battFull area before write
   tft.drawChar(1, wCy+7, battFull[0], GREEN);
   tft.drawChar(7, wCy+7, battFull[1], GREEN);
